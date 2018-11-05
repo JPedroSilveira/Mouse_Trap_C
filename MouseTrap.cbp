@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="MouseTrap" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/MouseTrap" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+				<Linker>
+					<Add library="Lib/libconio.a" />
+				</Linker>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/MouseTrap" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+		</Compiler>
+		<Unit filename="Consts/Boolean.h">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Consts/GameStartData.h" />
+		<Unit filename="Consts/InputCharactersCode.h" />
+		<Unit filename="Consts/MapCharacters.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Consts/MapCharacters.h" />
+		<Unit filename="Consts/MapColors.h" />
+		<Unit filename="Consts/MapDimensions.h" />
+		<Unit filename="Consts/MapTimers.h" />
+		<Unit filename="Structs/Cat.h">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Structs/Door.h">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Structs/GameData.h">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Structs/Mouse.h">
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/ColumnUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/ColumnUtils.h" />
+		<Unit filename="Utils/DrawUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/DrawUtils.h" />
+		<Unit filename="Utils/FileUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/FileUtils.h" />
+		<Unit filename="Utils/GameCoreUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/GameCoreUtils.h" />
+		<Unit filename="Utils/HeaderUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/HeaderUtils.h" />
+		<Unit filename="Utils/MapUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/MapUtils.h" />
+		<Unit filename="Utils/MenuUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/MenuUtils.h" />
+		<Unit filename="Utils/MovimentUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/MovimentUtils.h" />
+		<Unit filename="Utils/PauseUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/PauseUtils.h" />
+		<Unit filename="Utils/UserInputUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/UserInputUtils.h" />
+		<Unit filename="Utils/UsernameScreenUtils.c">
+			<Option compilerVar="CC" />
+			<Option target="Debug" />
+		</Unit>
+		<Unit filename="Utils/UsernameScreenUtils.h" />
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+			<Option weight="0" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
