@@ -1,61 +1,67 @@
 #include "MovimentUtils.h"
 
-void moveDoors(GAMEDATA *data){
-    DOOR *door = data->door;
+//Executa o movimento das portas, abrindo ou fechando
+void moveDoors(GAMEDATA* data){
+    DOOR* door = data->door;
     int newLine, newColumn;
 
-    while(door->exists){
-        if(data->doorsOpen == door->opened){
-            if(door->opened){
-                newLine = door->line - DOOR_D_DISPL;
-                newColumn = door->column - DOOR_R_DISPL;
-            } else {
-                newLine = door->line + DOOR_D_DISPL;
-                newColumn = door->column + DOOR_R_DISPL;
+    while (door != NULL){
+        if (data->doorsOpened == door->opened){
+            if (door->opened){
+                newLine = door->position.line - DOOR_D_DISPL;
+                newColumn = door->position.column - DOOR_R_DISPL;
+            } else{
+                newLine = door->position.line + DOOR_D_DISPL;
+                newColumn = door->position.column + DOOR_R_DISPL;
             }
-            char oldDoorPositionItem = data->gameMap[door->line][door->column];
+            char oldDoorPositionItem = data->gameMap[door->position.line][door->position.column];
             char newDoorPositionItem = data->gameMap[newLine][newColumn];
 
-            if(newDoorPositionItem != mouseCh && newDoorPositionItem != catCh){
+            if (newDoorPositionItem != mouseCh && newDoorPositionItem != catCh){
                 drawDoor(newLine, newColumn);
-                drawItemByCh(door->overlaid, door->line, door->column, 0, 0, 0, 0);
-                data->gameMap[door->line][door->column] = door->overlaid;
+                drawItemByCh(door->overlaid, door->position.line, door->position.column, 0, 0, 0, 0);
+                data->gameMap[door->position.line][door->position.column] = door->overlaid;
                 data->gameMap[newLine][newColumn] = oldDoorPositionItem;
                 door->opened = !door->opened;
                 door->overlaid = newDoorPositionItem;
-                door->line = newLine;
-                door->column = newColumn;
+                door->position.line = newLine;
+                door->position.column = newColumn;
             }
         }
 
         door = door->nextDoor;
     }
 
-    data->doorsOpen = !data->doorsOpen;
+    data->doorsOpened = !data->doorsOpened;
+    mapDistances(data);
 }
 
-void moveCat(GAMEDATA *data){
+void moveCat(GAMEDATA* data){
 
 }
 
-void moveMouse(GAMEDATA *data){
-    switch(data->mouse.direction){
+int generateRandomDirection(){
+    return rand() % (MOUSE_MAX_DIRECTION_NUMBER + 1 - MOUSE_MIN_DIRECTION_NUMBER) + MOUSE_MIN_DIRECTION_NUMBER;
+}
+
+void moveMouse(GAMEDATA* data){
+    switch (data->mouse.direction){
         case MOUSE_RIGHT_DIRECTION_CODE:
-            if(isCrossing(data->gameMap[data->mouse.line][data->mouse.column + 1])){
+            if (isCrossing(data->gameMap[data->mouse.position.line][data->mouse.position.column + 1])){
                 changeMousePosition(0, 1, 1, data);
-            } else {
+            } else{
                 data->mouse.direction = MOUSE_STOP_DIRECTION_CODE;
             }
             break;
         case MOUSE_LEFT_DIRECTION_CODE:
-            if(isCrossing(data->gameMap[data->mouse.line][data->mouse.column - 1])){
+            if(isCrossing(data->gameMap[data->mouse.position.line][data->mouse.position.column - 1])){
                 changeMousePosition(0, -1, 0, data);
             } else {
                 data->mouse.direction = MOUSE_STOP_DIRECTION_CODE;
             }
             break;
         case MOUSE_UP_DIRECTION_CODE:
-            if(isCrossing(data->gameMap[data->mouse.line - 1][data->mouse.column])){
+            if(isCrossing(data->gameMap[data->mouse.position.line - 1][data->mouse.position.column])){
                 changeMousePosition(-1, 0, 0, data);
                 decideMouseDirection(data);
             } else {
@@ -63,7 +69,7 @@ void moveMouse(GAMEDATA *data){
             }
             break;
         case MOUSE_DOWN_DIRECTION_CODE:
-            if(isCrossing(data->gameMap[data->mouse.line + 1][data->mouse.column])){
+            if(isCrossing(data->gameMap[data->mouse.position.line + 1][data->mouse.position.column])){
                 changeMousePosition(1, 0, 0, data);
                 decideMouseDirection(data);
             } else {
@@ -78,29 +84,29 @@ void moveMouse(GAMEDATA *data){
 }
 
 int isCrossing(char item){
-    for(int x = 0; x < AMOUNT_OF_NOT_PASSABLE_ITENS; x++){
-        if(nCrossingItens[x] == item){
+    for (int x = 0; x < AMOUNT_OF_NOT_PASSABLE_ITENS; x++){
+        if (nCrossingItens[x] == item){
             return 0;
         }
     }
     return 1;
 }
 
-void decideMouseDirection(GAMEDATA *data){
-    if(isCrossing(data->gameMap[data->mouse.line][data->mouse.column + 1]) && !isCrossing(data->gameMap[data->mouse.line][data->mouse.column - 1])){
+void decideMouseDirection(GAMEDATA* data){
+    if (isCrossing(data->gameMap[data->mouse.position.line][data->mouse.position.column + 1]) && !isCrossing(data->gameMap[data->mouse.position.line][data->mouse.position.column - 1])){
         data->mouse.faceDirection = 1;
-    } else if (isCrossing(data->gameMap[data->mouse.line][data->mouse.column - 1]) && !isCrossing(data->gameMap[data->mouse.line][data->mouse.column + 1])){
+    } else if(isCrossing(data->gameMap[data->mouse.position.line][data->mouse.position.column - 1]) && !isCrossing(data->gameMap[data->mouse.position.line][data->mouse.position.column + 1])){
         data->mouse.faceDirection = 0;
     }
 }
 
-void changeMousePosition(int lineIncrease, int columnIncrease, int faceDirection, GAMEDATA *data){
-    int newLine = data->mouse.line + lineIncrease;
-    int newColumn = data->mouse.column + columnIncrease;
+void changeMousePosition(int lineIncrease, int columnIncrease, int faceDirection, GAMEDATA* data){
+    int newLine = data->mouse.position.line + lineIncrease;
+    int newColumn = data->mouse.position.column + columnIncrease;
 
     char temp = data->gameMap[newLine][newColumn];
 
-    if(temp == foodCh){
+    if (temp == foodCh){
         data->score += SCORE_FOR_FOOD;
         data->nfood--;
         if(data->nfood <= 0){
@@ -108,30 +114,30 @@ void changeMousePosition(int lineIncrease, int columnIncrease, int faceDirection
         }
         textcolor(SCORE_TEXT_COLOR_ON_UPDATE);
         updateScoreOnScreen(*data);
-    }else if(temp == boneCh){
+    } else if(temp == boneCh){
         data->mouse.isDog = 1;
         data->mouse.start_time_dog = clock();
-    }else{ //Devolve o Score para a cor padrão
+    } else{ //Devolve o Score para a cor padrão
         textcolor(DEFAULT_TEXT_COLOR);
         updateScoreOnScreen(*data);
     }
 
     data->gameMap[newLine][newColumn] = mouseCh;
-    data->gameMap[data->mouse.line][data->mouse.column] = data->mouse.overlaid;
+    data->gameMap[data->mouse.position.line][data->mouse.position.column] = data->mouse.overlaid;
 
-    if(temp != catCh || data->mouse.isDog){
+    if (temp != catCh || data->mouse.isDog){
         drawMouse(newLine, newColumn, faceDirection, data->mouse.isDog);
     }
 
-    if(data->mouse.overlaid == catCh){
-        CAT cat = getCatByPosition(*data, data->mouse.line, data->mouse.column);
-        drawItemByCh(data->mouse.overlaid, data->mouse.line, data->mouse.column, cat.faceDirection, 0, 0, cat.immortal);
-    } else {
-        drawEmpty(data->mouse.line, data->mouse.column);
+    if (data->mouse.overlaid == catCh){
+        CAT cat = getCatByPosition(*data, data->mouse.position.line, data->mouse.position.column);
+        drawItemByCh(data->mouse.overlaid, data->mouse.position.line, data->mouse.position.column, cat.faceDirection, 0, 0, cat.immortal);
+    } else{
+        drawEmpty(data->mouse.position.line, data->mouse.position.column);
     }
 
-    data->mouse.line = newLine;
-    data->mouse.column = newColumn;
+    data->mouse.position.line = newLine;
+    data->mouse.position.column = newColumn;
     data->mouse.faceDirection = faceDirection;
     data->mouse.overlaid = ' ';
 }

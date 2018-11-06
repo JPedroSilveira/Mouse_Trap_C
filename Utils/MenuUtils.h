@@ -21,7 +21,7 @@
 #define MENU_BORDER_COLOR 14
 #define MENU_TEXT_COLOR 15
 
-void openMenu(GAMEDATA *data);
+void openMenu(GAMEDATA* data);
 void executeMenuChoice(GAMEDATA *data);
 void drawMenu();
 void drawMenuBG();

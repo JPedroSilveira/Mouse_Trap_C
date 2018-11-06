@@ -1,9 +1,9 @@
 #include "UserInputUtils.h"
 
 int tryCaptureUserInput(){
-    if(kbhit()){
+    if (kbhit()){
         return getche();
-    } else {
+    } else{
         return 0;
     }
 }

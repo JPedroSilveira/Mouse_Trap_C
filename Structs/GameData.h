@@ -11,10 +11,15 @@
 
 typedef struct GameData
 {
-   int paused, level, gameOver, menuOpened, exitGame, score, ncats, doorsOpen, waitForUserInput, nfood, updateLevel;
+   int paused, level,
+        gameOver, menuOpened,
+        exitGame, score, ncats, ndoors,
+        doorsOpened, waitForUserInput,
+        nfood, updateLevel;
    char gameMap[MAP_LINES][MAP_COLUMNS], username[NAME_MAX_LENGTH];
-   DOOR *door;
-   CAT *cat;
+   int mapDistances[MAP_LINES][MAP_COLUMNS];
+   DOOR* door;
+   CAT* cat;
    MOUSE mouse;
 }GAMEDATA;
 

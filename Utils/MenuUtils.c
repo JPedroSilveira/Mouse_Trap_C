@@ -1,24 +1,37 @@
 #include "MenuUtils.h"
 
-void openMenu(GAMEDATA *data){
+//Desenha o menu em tela e espera por uma entrada do usuário
+void openMenu(GAMEDATA* data){
+    //Configura o estado do jogo para Menu aberto
     data->menuOpened = TRUE;
     data->paused = TRUE;
+
+    //Atualiza o estado do jogo em tela
     updateExecutionState(*data);
+
+    //Desenha o Menu sobre a tela
     drawMenu();
+
+    //Aguarda e executa a escolha do usuário
     executeMenuChoice(data);
+
+    //Finaliza o menu
     data->menuOpened = FALSE;
 }
 
-void executeMenuChoice(GAMEDATA *data){
+void executeMenuChoice(GAMEDATA* data){
     clock_t start_time_dog = clock() - data->mouse.start_time_dog;
     int optSelected;
     int userCommand;
 
-    do{
+    do {
         optSelected = TRUE;
+
+        //Tenta capturar a entrada do usuario
         userCommand = tryCaptureUserInput();
 
-        switch(userCommand){
+        //Toma uma decisão conforme a tela pressionada
+        switch (userCommand){
             case TAB_CODE:
             case M_CHAR_CODE:
             case m_CHAR_CODE:
@@ -42,19 +55,20 @@ void executeMenuChoice(GAMEDATA *data){
                 data->paused = FALSE;
                 break;
             default:
+                //Caso não tenha sido pressionada nenhuma tecla válida continua o loop
                 optSelected = FALSE;
         }
     }while(!optSelected);
 }
 
-void drawMenu()
-{
+//Desenha o menu na tela
+void drawMenu(){
     drawMenuBG();
     drawMenuText();
 }
 
-void drawMenuText()
-{
+//Desenha os textos do menu
+void drawMenuText(){
     int x = MENU_INIT_COLUMN + 20;
     int y = MENU_INIT_LINE + 3;
     textcolor(MENU_TEXT_COLOR);
@@ -82,7 +96,7 @@ void drawMenuText()
     drawCat(8, 20, FALSE, FALSE);
 }
 
-void drawMenuBG()
-{
+//Desenha o fundo do Menu
+void drawMenuBG(){
     drawGenericBackground(MENU_HEIGHT, MENU_LENGTH, MENU_INIT_LINE, MENU_INIT_COLUMN, MENU_BG_COLOR, MENU_BORDER_COLOR);
 }

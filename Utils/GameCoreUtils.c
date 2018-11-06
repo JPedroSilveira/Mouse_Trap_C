@@ -1,6 +1,6 @@
 #include "GameCoreUtils.h"
 
-void startGameCore(GAMEDATA *data){
+void startGameCore(GAMEDATA* data){
     int userInput;
 
     clock_t start_mouse_move, elapsedTime;
@@ -10,6 +10,9 @@ void startGameCore(GAMEDATA *data){
     //Desenha mapa inicial
     drawMap(data, data->mouse.faceDirection);
 
+    //Mapeia as distâncias do rato
+    mapDistances(&data);
+
     do{
         //Limpa espaço de digitação do usuário na tela
         cleanScreen();
@@ -18,21 +21,21 @@ void startGameCore(GAMEDATA *data){
         if(data->waitForUserInput){
             userInput = waitForUserInput();
             data->waitForUserInput = 0;
-         } else { //Se não, tenta detectar tecla e continua execução
+        } else{ //Se não, tenta detectar tecla e continua execução
             userInput = tryCaptureUserInput();
         }
 
         //Toma uma decisão conforme tecla pressionada
         takeDecision(data, userInput);
 
-        if(data->mouse.isDog){
+        if (data->mouse.isDog){
             //Calcula o tempo que se passou desde que o rato virou cachorro
-            elapsedTime = ((end - data->mouse.start_time_dog) / (CLOCKS_PER_SEC / 1000));
+            elapsedTime = ((clock() - data->mouse.start_time_dog) / (CLOCKS_PER_SEC / 1000));
             //Caso tenha passado do limite máximo ou seja igual a ele desativa o modo cachorro
-            if(elapsedTime >= LIMIT_TIME_OF_DOG){
+            if (elapsedTime >= LIMIT_TIME_OF_DOG){
                 data->mouse.isDog = FALSE;
                 data->mouse.start_time_dog = FALSE;
-                drawMouse(data->mouse.line, data->mouse.column, data->mouse.faceDirection, data->mouse.isDog);
+                drawMouse(data->mouse.position.line, data->mouse.position.column, data->mouse.faceDirection, data->mouse.isDog);
             }
         }
 
@@ -40,16 +43,18 @@ void startGameCore(GAMEDATA *data){
         elapsedTime = ((clock() - start_mouse_move) / (CLOCKS_PER_SEC / 1000));
 
         //Caso tenha passado do tempo limite de movimentação desloca o rato novamente
-        if(elapsedTime > TIME_TO_MOVE_MOUSE){
+        if (elapsedTime > TIME_TO_MOVE_MOUSE){
             moveMouse(data);
             moveCat(data);
             start_mouse_move = clock();
+            //Mapeia as distâncias do rato
+            mapDistances(&data);
         }
 
         //Verifica se deve atualizar o nível ou verificar se algum gato se chocou com o rato
-        if(data->updateLevel){
+        if (data->updateLevel){
             updateLevel(data);
-        } else {
+        } else{
             verifyClash(data);
         }
     }while(!data->exitGame);
@@ -77,47 +82,48 @@ void updateLevel(GAMEDATA* data){
     drawMap(data, data->mouse.faceDirection);
 }
 
+//Desaloca a memório reservada para a lista de gatos e portas
 void freeOldData(GAMEDATA* data){
     CAT* cat = data->cat;
     CAT* nextCat = NULL;
 
-    while(cat->exists){
+    while (cat != NULL){
         nextCat = cat->nextCat;
-        free(&(cat));
+        free(cat);
         cat = nextCat;
     }
 
     DOOR* door = data->door;
     DOOR* nextDoor = NULL;
 
-    while(cat->exists){
+    while (door != NULL){
         nextDoor = door->nextDoor;
-        free(&(door));
+        free(door);
         door = nextDoor;
     }
 }
 
 //Verifica se algum gato se chocou contra o rato e toma decisão conforme estado do rato (normal ou cachorro)
-void verifyClash(GAMEDATA *data){
+void verifyClash(GAMEDATA* data){
     CAT* cat = data->cat;
 
     //Mantém o looping para cada gato existente
-    while(cat->exists){
-        if(cat->column == data->mouse.column && cat->line == data->mouse.line){
+    while (cat != NULL){
+        if (cat->position.column == data->mouse.position.column && cat->position.line == data->mouse.position.line){
             //Caso o rato esteja no modo cachorro e o gato não esteja imortal
-            if(data->mouse.isDog && !cat->immortal){
-                drawItemByCh(cat->overlaid, cat->line, cat->column, FALSE, FALSE, FALSE, FALSE);
-                data->gameMap[cat->line][cat->column] = cat->overlaid;
-                data->gameMap[cat->initialLine][cat->initialColumn] = catCh;
-                cat->line = cat->initialLine;
-                cat->column = cat->initialColumn;
+            if (data->mouse.isDog && !cat->immortal){
+                drawItemByCh(cat->overlaid, cat->position.line, cat->position.column, FALSE, FALSE, FALSE, FALSE);
+                data->gameMap[cat->position.line][cat->position.column] = cat->overlaid;
+                data->gameMap[cat->initialPosition.line][cat->initialPosition.column] = catCh;
+                cat->position.line = cat->initialPosition.line;
+                cat->position.column = cat->initialPosition.column;
                 cat->faceDirection = 0;
                 cat->immortal = TRUE;
                 cat->start_immortal_time = clock();
                 data->score += SCORE_FOR_CAT;
                 textcolor(SCORE_TEXT_COLOR_ON_UPDATE);
                 updateScoreOnScreen(*data);
-            } else if(!data->mouse.isDog) { // Caso o rato não esteja no modo cachorro, independente do estado do gato
+            } else if(!data->mouse.isDog){ // Caso o rato não esteja no modo cachorro, independente do estado do gato
                 //Toma decisão conforme vidas restantes do rato
                 if(data->mouse.nlifes > 1){
                     data->mouse.nlifes--;
@@ -125,7 +131,7 @@ void verifyClash(GAMEDATA *data){
                     drawDeathMessage();
                     Sleep(TIME_TO_SLEEP_AFTER_DEATH);
                     restartWithNewLife(data);
-                } else {
+                } else{
                     data->mouse.nlifes--;
                     data->gameOver = TRUE;
                     updateLifesInfoOnScreen(*data);
@@ -144,19 +150,19 @@ void verifyClash(GAMEDATA *data){
 //Reinicia jogo com a próxima vida reposicionando os elementos móveis (rato e gato)
 void restartWithNewLife(GAMEDATA* data){
     data->waitForUserInput = TRUE;
-    data->mouse.column = data->mouse.initialColumn;
-    data->mouse.line = data->mouse.initialLine;
+    data->mouse.position.column = data->mouse.initialPosition.column;
+    data->mouse.position.line = data->mouse.initialPosition.line;
     data->mouse.direction = 0;
     data->mouse.faceDirection = 0;
-    data->gameMap[data->mouse.column][data->mouse.column] = mouseCh;
+    data->gameMap[data->mouse.position.column][data->mouse.position.column] = mouseCh;
 
     CAT* cat = data->cat;
-    while(cat->exists){
-        drawItemByCh(cat->overlaid, cat->line, cat->column, FALSE, FALSE, FALSE, FALSE);
-        data->gameMap[cat->line][cat->column] = cat->overlaid;
-        data->gameMap[cat->initialLine][cat->initialColumn] = catCh;
-        cat->column = cat->initialColumn;
-        cat->line = cat->initialLine;
+    while (cat != NULL){
+        drawItemByCh(cat->overlaid, cat->position.line, cat->position.column, FALSE, FALSE, FALSE, FALSE);
+        data->gameMap[cat->position.line][cat->position.column] = cat->overlaid;
+        data->gameMap[cat->initialPosition.line][cat->initialPosition.column] = catCh;
+        cat->position.column = cat->initialPosition.column;
+        cat->position.line = cat->initialPosition.line;
         cat->faceDirection = 0;
         cat = cat->nextCat;
     }
@@ -175,8 +181,8 @@ void cleanScreen(){
 //Define os valores iniciais para um determinado nível do jogo,
 //recebe a pontuação, o nível, o número de vidas e o nome do usuário para iniciar um novo nível.
 //Conforme parâmetro askName a função pode solicitar o nome para o usuário.
-void startGameData(GAMEDATA *data, int level, int score, int nlifes, int askName){
-    if(askName){
+void startGameData(GAMEDATA* data, int level, int score, int nlifes, int askName){
+    if (askName){
         askUsername(data->username);
     }
 
@@ -190,23 +196,22 @@ void startGameData(GAMEDATA *data, int level, int score, int nlifes, int askName
     data->exitGame = FALSE;
     data->score = score;
     data->ncats = 0;
-    data->doorsOpen = FALSE;
+    data->ndoors = 0;
+    data->doorsOpened = FALSE;
     data->mouse.nlifes = nlifes;
     data->mouse.direction = 0;
     data->mouse.isDog = FALSE;
     data->mouse.start_time_dog = 0;
     data->mouse.overlaid = ' ';
-    data->door = malloc(sizeof(struct Door));
-    data->door->exists = FALSE;
-    data->cat = malloc(sizeof(struct Cat));
-    data->cat->exists = FALSE;
+    data->door = NULL;
+    data->cat = NULL;
     //Lê mapa do arquivo de texto
     readMap(MAP_LINES, MAP_COLUMNS, data);
 }
 
 //Toma uma decisão no jogo conforme tecla passada por parâmetro
-void takeDecision(GAMEDATA *data, int userInput){
-    switch(userInput){
+void takeDecision(GAMEDATA* data, int userInput){
+    switch (userInput){
         case DIRECTIONAL_KEYS:
             takeDecisionDirectionalKeys(data);
             break;
@@ -260,10 +265,10 @@ void takeDecision(GAMEDATA *data, int userInput){
 
 //Detecta uma tecla direcional pressionada e toma uma decisão de movimento
 //Deve ser utilizada após a leitura do primeiro valor da tecla direcional
-void takeDecisionDirectionalKeys(GAMEDATA *data){
+void takeDecisionDirectionalKeys(GAMEDATA* data){
     //Lê valor de tecla já pressionada
     int userInput = getche();
-    switch(userInput){
+    switch (userInput){
         case DIRECTIONAL_RIGHT:
             data->mouse.direction = MOUSE_RIGHT_DIRECTION_CODE;
             break;
@@ -291,8 +296,7 @@ void drawDeathMessage(){
 }
 
 //Desenha o Background da mensagem de morte
-void drawDeathMessageBG()
-{
+void drawDeathMessageBG(){
     drawGenericBackground(6, 46, 13, 37, 0, 14);
 }
 
@@ -333,12 +337,12 @@ void drawGameOverMessage(GAMEDATA* data){
     textcolor(HEADER_BG_BORDER_COLOR);
 
     //Mantém o looping até o usuário passar uma resposta válida
-    do{
+    do {
         gotoxy(1,1);
         answer = getche();
 
         //Reinicia o jogo
-        if(answer == S_CHAR_CODE || answer == s_CHAR_CODE){
+        if (answer == S_CHAR_CODE || answer == s_CHAR_CODE){
             freeOldData(data); //Validar função
 
             startGameData(data, INIT_LEVEL, 0, INIT_LIFE_AMOUNT, FALSE);
@@ -350,7 +354,7 @@ void drawGameOverMessage(GAMEDATA* data){
             drawMap(data, data->mouse.faceDirection);
 
             exit = TRUE;
-        } else if(answer == N_CHAR_CODE || answer == n_CHAR_CODE) {
+        } else if(answer == N_CHAR_CODE || answer == n_CHAR_CODE){
             data->exitGame = TRUE;
             exit = TRUE;
         }

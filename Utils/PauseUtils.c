@@ -1,16 +1,16 @@
 #include "PauseUtils.h"
 
-void pauseGame(GAMEDATA *data){
+void pauseGame(GAMEDATA* data){
     clock_t start_time_dog = clock() - data->mouse.start_time_dog;
     data->paused = TRUE;
     updateExecutionState(*data);
     drawPauseScreen();
     int _userCommand;
     int _continue = TRUE;
-    do{
+    do {
         _userCommand = tryCaptureUserInput();
 
-        switch(_userCommand){
+        switch (_userCommand){
             case 80: //P
             case 112:
                 data->paused = FALSE;
@@ -28,14 +28,12 @@ void pauseGame(GAMEDATA *data){
     }while(_continue);
 }
 
-void drawPauseScreen()
-{
+void drawPauseScreen(){
     drawPauseScreenBackground();
     drawPauseScreenText();
 }
 
-void drawPauseScreenText()
-{
+void drawPauseScreenText(){
     int x = PAUSE_SCREEN_INIT_COLUMN + 17;
     int y = PAUSE_SCREEN_INIT_LINE + 3;
     textcolor(PAUSE_SCREEN_TEXT_COLOR);
@@ -50,7 +48,6 @@ void drawPauseScreenText()
     drawCat(2, 19, FALSE, FALSE);
 }
 
-void drawPauseScreenBackground()
-{
+void drawPauseScreenBackground(){
     drawGenericBackground(PAUSE_SCREEN_HEIGHT, PAUSE_SCREEN_LENGTH, PAUSE_SCREEN_INIT_LINE, PAUSE_SCREEN_INIT_COLUMN, PAUSE_SCREEN_BACKGROUND_COLOR, PAUSE_SCREEN_BORDER_COLOR);
 }

@@ -16,11 +16,11 @@ void drawUsernameScreen(){
     int itemVector[ASK_NAME_HEIGHT][ASK_NAME_LENGTH];
     char chVector[ASK_NAME_HEIGHT][ASK_NAME_LENGTH];
 
-    for(int x = 0; x < ASK_NAME_HEIGHT; x++){
-        for(int y = 0; y < ASK_NAME_LENGTH; y++){
-            if(x == 0 || y == 0 || x == ASK_NAME_HEIGHT - 1 || y == ASK_NAME_LENGTH - 1){
+    for (int x = 0; x < ASK_NAME_HEIGHT; x++){
+        for (int y = 0; y < ASK_NAME_LENGTH; y++){
+            if (x == 0 || y == 0 || x == ASK_NAME_HEIGHT - 1 || y == ASK_NAME_LENGTH - 1){
                 itemVector[x][y] = ASK_NAME_BORDER_COLOR;
-            } else {
+            } else{
                 itemVector[x][y] = ASK_NAME_BG_COLOR;
             }
             chVector[x][y] = ' ';

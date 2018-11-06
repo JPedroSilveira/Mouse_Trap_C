@@ -20,15 +20,15 @@
 #include "ColumnUtils.h"
 #include "MapUtils.h"
 
-void startGameCore(GAMEDATA *data);
+void startGameCore(GAMEDATA* data);
 void updateLevel(GAMEDATA* data);
 void freeOldData(GAMEDATA* data);
-void verifyClash(GAMEDATA *data);
+void verifyClash(GAMEDATA* data);
 void restartWithNewLife(GAMEDATA* data);
 void cleanScreen();
-void startGameData(GAMEDATA *data, int level, int score, int nlifes, int askName);
-void takeDecision(GAMEDATA *data, int userInput);
-void takeDecisionDirectionalKeys(GAMEDATA *data);
+void startGameData(GAMEDATA* data, int level, int score, int nlifes, int askName);
+void takeDecision(GAMEDATA* data, int userInput);
+void takeDecisionDirectionalKeys(GAMEDATA* data);
 void drawDeathMessage();
 void drawDeathMessageBG();
 void drawUpLevelMessage();

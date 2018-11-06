@@ -17,7 +17,7 @@
 #define PAUSE_SCREEN_BORDER_COLOR 14
 #define PAUSE_SCREEN_TEXT_COLOR 15
 
-void pauseGame(GAMEDATA *data);
+void pauseGame(GAMEDATA* data);
 void drawPauseScreen();
 void drawPauseScreenBackground();
 void drawPauseScreenText();

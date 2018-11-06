@@ -2,10 +2,12 @@
 #define MOVIMENTUTILS_H_INCLUDED
 
 #include <windows.h>
+#include <time.h>
 #include "../Consts/Boolean.h"
 #include "../Consts/MapCharacters.h"
 #include "../Consts/Boolean.h"
 #include "../Structs/GameData.h"
+#include "../Structs/Mouse.h"
 #include "DrawUtils.h"
 #include "MapUtils.h"
 
@@ -18,12 +20,13 @@
 
 #define MOVIMENT_DELAY 200
 
-void moveMouse(GAMEDATA *data);
-void moveDoors(GAMEDATA *data);
+void moveMouse(GAMEDATA* data);
+void moveDoors(GAMEDATA* data);
 void decideMouseDirection(GAMEDATA *data);
 int isCrossing(char item);
 int isFood(char item);
 void changeMousePosition(int lineIncrease, int columnIncrease, int mouseDirection, GAMEDATA *data);
-void moveCat(GAMEDATA *data);
+void moveCat(GAMEDATA* data);
+int generateRandomDirection();
 
 #endif // MOVIMENTUTILS_H_INCLUDED
