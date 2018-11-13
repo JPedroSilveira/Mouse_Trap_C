@@ -150,6 +150,9 @@ int loadSavedGameFile(GAMEDATA* data, char fileName[MAX_FILE_NAME]){
     FILE* file;
 
     if ((file = fopen(directory, "rb")) != NULL){
+        //Desaloca memória guardada para antigos ponteiros de gatos e portas
+        freeOldData(data);
+
         //Posiciona ponteiro no inicio do arquivo
         rewind(file);
 
@@ -253,10 +256,13 @@ void getSaveGamesDirectoryName(char directory[MAX_PATH_LENGTH]){
 }
 
 //Exibe as informações do menu de carregar jogo
-//retorna 0 caso não seja possivel carregar o jogo
+//Retorno:
+// 0 - Não foi possível carregar o jogo
+// 1 - Jogo carregador
+// 2 - Operação abortada pelo usuário
 int startLoadGameMenu(GAMEDATA* data){
     char directoryNames[MAX_FILES][MAX_FILE_NAME];
-    int userAnswer, fileSelected = 0, filesCount = 0, page = 1, selectedItem, lastPage = 1, _return = FALSE;
+    int userAnswer, fileSelected = 0, filesCount = 0, page = 1, selectedItem, lastPage = 1, _return = 0;
 
     filesCount = getSavedGamesList(directoryNames);
 
@@ -288,6 +294,11 @@ int startLoadGameMenu(GAMEDATA* data){
                         break;
                 }
                 break;
+            case M_CHAR_CODE:
+            case m_CHAR_CODE:
+                _return = 2;
+                fileSelected = 1;
+                break;
             default:
                 selectedItem = filesCount - ((page - 1) * LOAD_GAME_MENU_PAGE_LENGTH) - userAnswer + 49;
 
@@ -306,8 +317,11 @@ void drawFilesList(char directoryNames[MAX_FILES][MAX_FILE_NAME], int filesCount
     drawLoadGameMenuBG();
 
     cputsxy(x, y, "Digite o número da opção:");
+    y += 1;
+    x += 3;
+    cputsxy(x, y, "(Tecle M para sair)");
     y += 3;
-    x -= 2;
+    x -= 5;
 
     //Pega o último indice do array que deve aparecer na página
     lastFile = filesCount - (page * LOAD_GAME_MENU_PAGE_LENGTH);

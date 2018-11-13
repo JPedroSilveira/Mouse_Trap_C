@@ -48,15 +48,19 @@ void executeMenuChoice(GAMEDATA* data){
                 break;
             case C_CHAR_CODE:
             case c_CHAR_CODE:
-                freeOldData(data);
                 response = startLoadGameMenu(data);
-                if(!response){
-                    data->gameOver = TRUE;
-                    data->exitGame = TRUE;
+                switch(response){
+                    case 0:
+                        data->gameOver = TRUE;
+                        data->exitGame = TRUE;
+                        break;
+                    case 1:
+                        drawSideColumns();
+                        drawGameInfo(*data);
+                        drawMap(data, data->mouse.faceDirection);
+                        break;
                 }
-                drawSideColumns();
-                drawGameInfo(*data);
-                drawMap(data, data->mouse.faceDirection);
+
                 data->paused = FALSE;
                 break;
             case Q_CHAR_CODE:
