@@ -16,6 +16,8 @@ void drawGameInfo(GAMEDATA data){
 
     updateCatsInfoOnScreen(data);
 
+    updateFoodInfoOnScreen(data);
+
     cputsxy(7, 27, "[M] = Acessar o menu");
 
     cputsxy(89, 9, "Tenha cuidado, fuja dos gatos!");
@@ -31,6 +33,12 @@ void drawUserName(GAMEDATA data){
     printf("%c%53c", '>','<');
     gotoxy(35, 29);
     printf("Jogador: %s", data.username);
+}
+
+//Atualiza a contagem de queijos restantes na tela
+void updateFoodInfoOnScreen(GAMEDATA data){
+    gotoxy(5, 25);
+    printf("Queijos restantes: %d     ", data.nfood);
 }
 
 //Atualiza a pontuação na tela

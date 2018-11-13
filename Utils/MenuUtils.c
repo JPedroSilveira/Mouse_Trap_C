@@ -19,6 +19,7 @@ void openMenu(GAMEDATA* data){
     data->menuOpened = FALSE;
 }
 
+//Mantem o menu aberto e aguarda uma entrada do usuário para executar a opção
 void executeMenuChoice(GAMEDATA* data){
     clock_t start_time_dog = clock() - data->mouse.start_time_dog;
     int optSelected;
@@ -44,14 +45,20 @@ void executeMenuChoice(GAMEDATA* data){
                 break;
             case C_CHAR_CODE:
             case c_CHAR_CODE:
+                freeOldData(data);
+                startLoadGameMenu(data);
+                drawSideColumns();
+                drawGameInfo(*data);
+                drawMap(data, data->mouse.faceDirection);
                 data->paused = FALSE;
                 break;
-            case Q_CHAR_CODE: //Q
+            case Q_CHAR_CODE:
             case q_CHAR_CODE:
                 data->exitGame = TRUE;
                 break;
             case S_CHAR_CODE:
             case s_CHAR_CODE:
+                saveGame(*data);
                 data->paused = FALSE;
                 break;
             default:

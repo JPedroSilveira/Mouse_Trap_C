@@ -13,10 +13,6 @@ int main(){
     //Configura a semente para geração de valores aleatórios
     srand(time(NULL));
 
-    //Configura posição e tamanho do terminal
-    HWND wh = GetConsoleWindow();
-    MoveWindow(wh, 600, 350, 994, 520, TRUE);
-
     //"Esconde" o cursor
     hideCursor();
 

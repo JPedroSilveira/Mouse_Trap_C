@@ -1,5 +1,4 @@
 #include "MouseSearch.h"
-
 //Calcula a distância de todos os pontos passíveis de acesso ao rato
 void mapDistances(GAMEDATA* data){
     for(int y = 0; y < MAP_LINES; y++){

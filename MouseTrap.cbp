@@ -34,84 +34,67 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="Consts/Boolean.h">
-			<Option target="Debug" />
-		</Unit>
+		<Unit filename="Consts/Boolean.h" />
 		<Unit filename="Consts/GameStartData.h" />
 		<Unit filename="Consts/InputCharactersCode.h" />
 		<Unit filename="Consts/MapCharacters.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Consts/MapCharacters.h" />
 		<Unit filename="Consts/MapColors.h" />
 		<Unit filename="Consts/MapDimensions.h" />
 		<Unit filename="Consts/MapTimers.h" />
-		<Unit filename="Structs/Cat.h">
-			<Option target="Debug" />
-		</Unit>
-		<Unit filename="Structs/Door.h">
-			<Option target="Debug" />
-		</Unit>
-		<Unit filename="Structs/GameData.h">
-			<Option target="Debug" />
-		</Unit>
-		<Unit filename="Structs/Mouse.h">
-			<Option target="Debug" />
-		</Unit>
+		<Unit filename="Structs/Cat.h" />
+		<Unit filename="Structs/Door.h" />
+		<Unit filename="Structs/GameData.h" />
+		<Unit filename="Structs/Mouse.h" />
+		<Unit filename="Structs/Position.h" />
 		<Unit filename="Utils/ColumnUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/ColumnUtils.h" />
 		<Unit filename="Utils/DrawUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/DrawUtils.h" />
 		<Unit filename="Utils/FileUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/FileUtils.h" />
 		<Unit filename="Utils/GameCoreUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/GameCoreUtils.h" />
 		<Unit filename="Utils/HeaderUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/HeaderUtils.h" />
 		<Unit filename="Utils/MapUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/MapUtils.h" />
 		<Unit filename="Utils/MenuUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/MenuUtils.h" />
+		<Unit filename="Utils/MouseSearch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="Utils/MouseSearch.h" />
 		<Unit filename="Utils/MovimentUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/MovimentUtils.h" />
 		<Unit filename="Utils/PauseUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/PauseUtils.h" />
 		<Unit filename="Utils/UserInputUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/UserInputUtils.h" />
 		<Unit filename="Utils/UsernameScreenUtils.c">
 			<Option compilerVar="CC" />
-			<Option target="Debug" />
 		</Unit>
 		<Unit filename="Utils/UsernameScreenUtils.h" />
 		<Unit filename="main.c">

@@ -9,7 +9,7 @@ void readMap(int ln, int col, GAMEDATA* data){
     FILE* file;
 
     //Pega o diretório do arquivo baseado no nível
-    getDirectoryName(directory, data->level);
+    getLevelDirectoryName(directory, data->level);
 
     //Lê o arquivo
     if ((file = fopen(directory, "r")) != NULL){
@@ -66,6 +66,8 @@ void readMap(int ln, int col, GAMEDATA* data){
                 }
             }
         }
+    } else{
+        data->win = TRUE;
     }
     //Fecha o arquivo
     fclose(file);
@@ -84,11 +86,17 @@ int saveGame(GAMEDATA data){
     return _return;
 }
 
+//Carrega um jogo salvo
+int loadGame(GAMEDATA* data){
+    startLoadGameMenu(data);
+    return 0;
+}
+
 //Cria o arquivo com o estado do jogo salvo
 int createSaveGameFile(GAMEDATA data, char directory[MAX_PATH_LENGTH]){
     time_t rawtime;
     struct tm* timeinfo;
-    int cursorPosition = 1, _return = 1;
+    int _return = 1;
     FILE* file;
 
     time(&rawtime);
@@ -109,30 +117,72 @@ int createSaveGameFile(GAMEDATA data, char directory[MAX_PATH_LENGTH]){
 
     if((file = fopen(directory, "wb")) == NULL){
         _return = 0;
-    } else if (fwrite(&data, sizeof(GAMEDATA), cursorPosition, file) != 1){
+    } else if (fwrite(&data, sizeof(GAMEDATA), 1, file) != 1){
         _return = 0;
     } else{
         int x;
 
         CAT* cat = data.cat;
         for (x = 0; x < data.ncats; x++){
-            cursorPosition++;
-            if (fwrite(cat, sizeof(CAT), cursorPosition, file) != 1) {
-                _return = 0;
-            }
+            fwrite(cat, sizeof(CAT), 1, file);
             cat = cat->nextCat;
         }
 
         DOOR* door = data.door;
         for (x = 0; x < data.ndoors; x++){
-            cursorPosition++;
-            if (fwrite(door, sizeof(DOOR), cursorPosition, file) != 1){
-                _return = 0;
-            }
+            fwrite(door, sizeof(DOOR), 1, file);
             door = door->nextDoor;
         }
     }
     fclose(file);
+    return _return;
+}
+
+//Exibe um menu com os jogos salvos
+int loadSavedGameFile(GAMEDATA* data, char fileName[MAX_FILE_NAME]){
+    int _return = 0, x = 0;
+    char directory[MAX_PATH_LENGTH];
+
+    getSaveGamesDirectoryName(directory);
+
+    snprintf(directory, MAX_PATH_LENGTH, "%s%s%s", directory, fileName, ".bin");
+
+    FILE* file;
+
+    if ((file = fopen(directory, "rb")) != NULL){
+        //Posiciona ponteiro no inicio do arquivo
+        rewind(file);
+
+        fread(data, sizeof(GAMEDATA), 1, file);
+
+        data->cat = malloc(sizeof(CAT));
+        data->door = malloc(sizeof(DOOR));
+
+        CAT* cat = data->cat;
+
+        for(x = 0; x < data->ncats; x++){
+            fread(cat, sizeof(CAT), 1, file);
+
+            cat->nextCat = malloc(sizeof(CAT));
+            cat = cat->nextCat;
+        }
+
+        cat->nextCat = NULL;
+
+        DOOR* door = data->door;
+
+        for(x = 0; x < data->ndoors; x++){
+            fread(door, sizeof(DOOR), 1, file);
+
+            door->nextDoor = malloc(sizeof(DOOR));
+            door = door->nextDoor;
+        }
+
+        door->nextDoor = NULL;
+
+        _return = 1;
+    }
+
     return _return;
 }
 
@@ -145,14 +195,147 @@ void createSaveGameDirectoryIFDoesntExists(char directory[MAX_PATH_LENGTH]){
     mkdir(directory);
 }
 
-int loadGame(GAMEDATA* data){
+//Preenche o vetor com o nome dos arquivos de jogos salvos e retorna o número de arquivos encontrados
+int getSavedGamesList(char directoryNames[MAX_FILES][MAX_FILE_NAME]){
+    int filesLimit = 1, i = 0, countFiles = 0, trashCount = 0;
+    char directory[MAX_PATH_LENGTH];
 
+    getSaveGamesDirectoryName(directory);
+
+    DIR *dir = NULL;
+    struct dirent *drnt = NULL;
+    dir = opendir(directory);
+
+    if (dir){
+        while ((drnt = readdir(dir)) && filesLimit){
+            if (trashCount < 2){ //Pula os diretórios "." e ".."
+                trashCount++;
+            } else {
+                //Copia o nome do arquivo para o vetor directoryNames
+                strcpy(directoryNames[i], drnt->d_name);
+                //Remove a extensão ".bin" dos nomes
+                directoryNames[i][(strlen(directoryNames[i])-4)] = '\0';
+                i++;
+
+                //Verifica se o limite de arquivos carregados foi atingido e para a execução
+                if (i == MAX_FILES){
+                    filesLimit = 0;
+                }
+            }
+        }
+        countFiles = i;
+        closedir(dir);
+    }
+
+    return countFiles;
 }
 
 //Retorna o diretório do arquivo do nível passado por parâmetro
-void getDirectoryName(char directory[MAX_PATH_LENGTH], int level)
-{
+void getLevelDirectoryName(char directory[MAX_PATH_LENGTH], int level){
     getcwd(directory, MAX_PATH_LENGTH);
 
     snprintf(directory, MAX_PATH_LENGTH, "%s%s%d%s", directory, "\\Levels\\nivel", level, ".txt");
+}
+
+//Retorna o diretório do arquivo do jogos salvos passado por parâmetro
+void getSaveGamesDirectoryName(char directory[MAX_PATH_LENGTH]){
+    getcwd(directory, MAX_PATH_LENGTH);
+
+    snprintf(directory, MAX_PATH_LENGTH, "%s%s", directory, "\\SavedGames\\");
+}
+
+//Exibe as informações do menu de carregar jogo
+void startLoadGameMenu(GAMEDATA* data){
+    char directoryNames[MAX_FILES][MAX_FILE_NAME];
+    int userAnswer, fileSelected = 0, filesCount = 0, page = 1, selectedItem, lastPage = 1;
+
+    filesCount = getSavedGamesList(directoryNames);
+
+    lastPage = ceil((float)filesCount / LOAD_GAME_MENU_PAGE_LENGTH);
+
+    textcolor(LOAD_GAME_MENU_TEXT_COLOR);
+    textbackground(LOAD_GAME_MENU_BG_COLOR);
+
+    drawFilesList(directoryNames, filesCount, page, lastPage);
+
+    do{
+        userAnswer = getch();
+
+        switch(userAnswer){
+            case DIRECTIONAL_KEYS:
+                userAnswer = getch();
+                switch(userAnswer){
+                    case DIRECTIONAL_RIGHT:
+                        if(page + 1 <= lastPage){
+                            page++;
+                            drawFilesList(directoryNames, filesCount, page, lastPage);
+                        }
+                        break;
+                    case DIRECTIONAL_LEFT:
+                        if(page - 1 >= 1){
+                            page--;
+                            drawFilesList(directoryNames, filesCount, page, lastPage);
+                        }
+                        break;
+                }
+                break;
+            default:
+                selectedItem = filesCount - ((page - 1) * LOAD_GAME_MENU_PAGE_LENGTH) - userAnswer + 49;
+
+                if(userAnswer - 49 < LOAD_GAME_MENU_PAGE_LENGTH && selectedItem > 0){
+                    fileSelected = loadSavedGameFile(data, directoryNames[selectedItem - 1]);
+                }
+                break;
+        }
+    }while(!fileSelected);
+}
+
+void drawFilesList(char directoryNames[MAX_FILES][MAX_FILE_NAME], int filesCount, int page, int lastPage){
+    int count = 1, lastFile, firstFile, x = LOAD_GAME_MENU_INIT_COLUMN + 10, y = LOAD_GAME_MENU_INIT_LINE + 3;
+
+    drawLoadGameMenuBG();
+
+    cputsxy(x, y, "Digite o número da opção:");
+    y += 3;
+    x -= 2;
+
+    //Pega o último indice do array que deve aparecer na página
+    lastFile = filesCount - (page * LOAD_GAME_MENU_PAGE_LENGTH);
+
+    //Pega o primeiro indice do array que deve aparecer na página
+    firstFile = filesCount - ((page - 1) * LOAD_GAME_MENU_PAGE_LENGTH);
+
+    //Caso o último indíce seja menor que ZERO (Última página com menos de LOAD_GAME_MENU_PAGE_LENGTH elementos, seta como ZERO
+    if(lastFile < 0){
+        lastFile = 0;
+    }
+
+    //Enquando o arquivo atual (firstFile) for maior que o último arquivo a ser exibido na página
+    while(firstFile > lastFile){
+        //Exibe o nome do arquivo e sua posição
+        gotoxy(x, y);
+        printf("[%d]: %s", count, directoryNames[firstFile - 1]);
+        //Acrescenta valor ao Y para a distância do próximo elemento
+        y += 2;
+        //Acrescenta 1 ao contador que exibe o ID dos arquivos
+        count++;
+        //Decrescenta 1 para exibir o próximo arquivo
+        firstFile--;
+    }
+
+    y += 1;
+    x += 6;
+    gotoxy(x, y);
+    cputsxy(x, y, "Página ");
+    printf("[%d] de [%d]", page, lastPage);
+
+    y += 1;
+    x -= 7;
+    cputsxy(x, y, "Setas direcionáis mudam a página");
+}
+
+//Desenha o painel de fundo do menu de carregar jogo
+void drawLoadGameMenuBG(){
+    drawGenericBackground(LOAD_GAME_MENU_HEIGHT, LOAD_GAME_MENU_LENGTH, LOAD_GAME_MENU_INIT_LINE,
+                            LOAD_GAME_MENU_INIT_COLUMN, LOAD_GAME_MENU_BG_COLOR, LOAD_GAME_MENU_BORDER_COLOR);
 }

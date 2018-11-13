@@ -1,5 +1,6 @@
 #include "UsernameScreenUtils.h"
 
+//Desenha a tela perguntando pelo nome do usuário e aguarda a resposta
 void askUsername(char username[NAME_MAX_LENGTH]){
     drawUsernameScreen();
 
@@ -12,6 +13,7 @@ void askUsername(char username[NAME_MAX_LENGTH]){
     gets(username);
 }
 
+//Desenha o fundo da tela de pergunta para o nome de usuário
 void drawUsernameScreen(){
     int itemVector[ASK_NAME_HEIGHT][ASK_NAME_LENGTH];
     char chVector[ASK_NAME_HEIGHT][ASK_NAME_LENGTH];

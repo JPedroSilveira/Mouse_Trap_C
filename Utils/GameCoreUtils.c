@@ -1,17 +1,16 @@
 #include "GameCoreUtils.h"
 
+//Inicia e mantem a continuidade do jogo por repetições
 void startGameCore(GAMEDATA* data){
     int userInput;
 
-    clock_t start_mouse_move, elapsedTime;
-
-    start_mouse_move = clock();
+    clock_t start_mouse_move = clock(), start_cats_move = clock(), elapsedTime;
 
     //Desenha mapa inicial
     drawMap(data, data->mouse.faceDirection);
 
     //Mapeia as distâncias do rato
-    mapDistances(&data);
+    mapDistances(data);
 
     do{
         //Limpa espaço de digitação do usuário na tela
@@ -19,7 +18,7 @@ void startGameCore(GAMEDATA* data){
 
         //Caso o jogo deve esperar por uma tecla do usuário para começar
         if(data->waitForUserInput){
-            userInput = waitForUserInput();
+            userInput = getche();
             data->waitForUserInput = 0;
         } else{ //Se não, tenta detectar tecla e continua execução
             userInput = tryCaptureUserInput();
@@ -45,10 +44,16 @@ void startGameCore(GAMEDATA* data){
         //Caso tenha passado do tempo limite de movimentação desloca o rato novamente
         if (elapsedTime > TIME_TO_MOVE_MOUSE){
             moveMouse(data);
-            moveCat(data);
             start_mouse_move = clock();
             //Mapeia as distâncias do rato
-            mapDistances(&data);
+            mapDistances(data);
+        }
+
+        elapsedTime = ((clock() - start_cats_move) / (CLOCKS_PER_SEC / 1000));
+
+        if(elapsedTime > TIME_TO_MOVE_CATS){
+            moveCat(data);
+            start_cats_move = clock();
         }
 
         //Verifica se deve atualizar o nível ou verificar se algum gato se chocou com o rato
@@ -74,12 +79,18 @@ void updateLevel(GAMEDATA* data){
     //Configura os dados do jogo
     startGameData(data, data->level, data->score, data->mouse.nlifes, FALSE);
 
-    //Desenha nova tela
-    drawSideColumns();
+    //Caso não existam mais novos mapas
+    if(data->win){
+        //Desenha mensagem de vitória
+        drawWinMessage(data);
+    } else{
+        //Desenha nova tela
+        drawSideColumns();
 
-    drawGameInfo(*data);
+        drawGameInfo(*data);
 
-    drawMap(data, data->mouse.faceDirection);
+        drawMap(data, data->mouse.faceDirection);
+    }
 }
 
 //Desaloca a memório reservada para a lista de gatos e portas
@@ -112,17 +123,22 @@ void verifyClash(GAMEDATA* data){
         if (cat->position.column == data->mouse.position.column && cat->position.line == data->mouse.position.line){
             //Caso o rato esteja no modo cachorro e o gato não esteja imortal
             if (data->mouse.isDog && !cat->immortal){
-                drawItemByCh(cat->overlaid, cat->position.line, cat->position.column, FALSE, FALSE, FALSE, FALSE);
-                data->gameMap[cat->position.line][cat->position.column] = cat->overlaid;
+                drawMouse(cat->position.line, cat->position.column, data->mouse.faceDirection, data->mouse.isDog);
+                data->gameMap[cat->position.line][cat->position.column] = mouseCh;
                 data->gameMap[cat->initialPosition.line][cat->initialPosition.column] = catCh;
+                data->mouse.overlaid = cat->overlaid;
+                cat->overlaid = ' ';
                 cat->position.line = cat->initialPosition.line;
                 cat->position.column = cat->initialPosition.column;
                 cat->faceDirection = 0;
                 cat->immortal = TRUE;
                 cat->start_immortal_time = clock();
+                drawCat(cat->position.line, cat->position.column, cat->faceDirection, cat->immortal);
                 data->score += SCORE_FOR_CAT;
                 textcolor(SCORE_TEXT_COLOR_ON_UPDATE);
                 updateScoreOnScreen(*data);
+            } else if(data->mouse.isDog){
+                data->mouse.overlaid = catCh;
             } else if(!data->mouse.isDog){ // Caso o rato não esteja no modo cachorro, independente do estado do gato
                 //Toma decisão conforme vidas restantes do rato
                 if(data->mouse.nlifes > 1){
@@ -139,8 +155,6 @@ void verifyClash(GAMEDATA* data){
                     Sleep(TIME_TO_SLEEP_AFTER_DEATH);
                     drawGameOverMessage(data);
                 }
-            } else if(data->mouse.isDog && cat->immortal){ //Caso o rato esteja no modo cachorro e o gato esteja imortal
-                data->mouse.overlaid = catCh;
             }
         }
         cat = cat->nextCat;
@@ -154,7 +168,8 @@ void restartWithNewLife(GAMEDATA* data){
     data->mouse.position.line = data->mouse.initialPosition.line;
     data->mouse.direction = 0;
     data->mouse.faceDirection = 0;
-    data->gameMap[data->mouse.position.column][data->mouse.position.column] = mouseCh;
+    data->mouse.overlaid = ' ';
+    data->gameMap[data->mouse.position.line][data->mouse.position.column] = mouseCh;
 
     CAT* cat = data->cat;
     while (cat != NULL){
@@ -188,6 +203,7 @@ void startGameData(GAMEDATA* data, int level, int score, int nlifes, int askName
 
     data->nfood = 0;
     data->updateLevel = FALSE;
+    data->win = FALSE;
     data->waitForUserInput = TRUE;
     data->paused = FALSE;
     data->level = level;
@@ -303,23 +319,42 @@ void drawDeathMessageBG(){
 //Desenha uma mensagem informando ao usuário que passou de nível
 void drawUpLevelMessage(){
     drawUpLevelBG();
-    textcolor(PAUSE_SCREEN_TEXT_COLOR);
-    textbackground(PAUSE_SCREEN_BACKGROUND_COLOR);
+    textcolor(UPDATE_LEVEL_SCREEN_TEXT_COLOR);
+    textbackground(UPDATE_LEVEL_SCREEN_BACKGROUND_COLOR);
     cputsxy(50, 16, "-> Próximo level! <-");
 
     drawCat(4, 6, TRUE, FALSE);
     drawCat(4, 21, FALSE, FALSE);
 }
 
-//Desenha o Background da mensagem de novo nível
+//Desenha o painel de fundo da mensagem de novo nível
 void drawUpLevelBG(){
+    drawGenericBackground(6, 46, 13, 37, 0, 14);
+}
+
+//Desenha uma mensagem informando que o usuário virou o jogo
+void drawWinMessage(GAMEDATA* data){
+    drawWinBG();
+    textcolor(WIN_MESSAGE_SCREEN_TEXT_COLOR);
+    textbackground(WIN_MESSAGE_SCREEN_BACKGROUND_COLOR);
+    cputsxy(43, 16, "-> Parabéns, você virou o jogo! <-");
+
+    drawMouse(4, 4, TRUE, TRUE);
+    drawMouse(4, 22, FALSE, TRUE);
+
+    Sleep(WIN_MESSAGE_DELAY);
+    cputsxy(43, 16, "                                  ");
+    drawRestartMessage(data);
+}
+
+//Desenha o painel de fundo da mensagem de jogo virado
+void drawWinBG(){
+
     drawGenericBackground(6, 46, 13, 37, 0, 14);
 }
 
 //Desenha uma mensagem de fim de jogo
 void drawGameOverMessage(GAMEDATA* data){
-    int exit = FALSE, answer = 0;
-
     drawGameOverBG();
     textcolor(PAUSE_SCREEN_TEXT_COLOR);
     textbackground(PAUSE_SCREEN_BACKGROUND_COLOR);
@@ -328,7 +363,21 @@ void drawGameOverMessage(GAMEDATA* data){
     //Desenha imagens do gato nos lados da mensagem
     drawCat(4, 6, TRUE, FALSE);
     drawCat(4, 21, FALSE, FALSE);
+
+    //Aguarda um tempo pré-configurado
     Sleep(GAME_OVER_WAIT_TIME);
+
+    drawRestartMessage(data);
+}
+
+//Desenha o background da mensagem de fim de jogo
+void drawGameOverBG(){
+    drawGenericBackground(6, 46, 13, 37, 0, 14);
+}
+
+//Desenha uma mensagem perguntando se o usuário deseja reiniciar o jogo ou sair e aguarda a resposta executando a ação
+void drawRestartMessage(GAMEDATA* data){
+    int exit = FALSE, answer = 0;
 
     gotoxy(49,16);
     printf("Deseja reiniciar? (S/N)");
@@ -360,10 +409,3 @@ void drawGameOverMessage(GAMEDATA* data){
         }
     }while(!exit);
 }
-
-//Desenha o background da mensagem de fim de jogo
-void drawGameOverBG(){
-    drawGenericBackground(6, 46, 13, 37, 0, 14);
-}
-
-

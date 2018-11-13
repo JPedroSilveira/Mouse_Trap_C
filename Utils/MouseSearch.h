@@ -2,6 +2,7 @@
 #define MOUSESEARCH_H_INCLUDED
 
 #include "../Consts/MapDimensions.h"
+#include "../Consts/MapCharacters.h"
 #include "../Structs/GameData.h""
 
 void mapDistances(GAMEDATA* data);

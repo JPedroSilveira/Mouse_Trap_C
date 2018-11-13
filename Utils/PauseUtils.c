@@ -1,5 +1,6 @@
 #include "PauseUtils.h"
 
+//Mantem o jogo pausado aguardando uma entrada do usuário
 void pauseGame(GAMEDATA* data){
     clock_t start_time_dog = clock() - data->mouse.start_time_dog;
     data->paused = TRUE;
@@ -28,11 +29,13 @@ void pauseGame(GAMEDATA* data){
     }while(_continue);
 }
 
+//Desenha o aviso de jogo pausado
 void drawPauseScreen(){
     drawPauseScreenBackground();
     drawPauseScreenText();
 }
 
+//Desenha o texto do aviso de jogo pausado
 void drawPauseScreenText(){
     int x = PAUSE_SCREEN_INIT_COLUMN + 17;
     int y = PAUSE_SCREEN_INIT_LINE + 3;
@@ -48,6 +51,7 @@ void drawPauseScreenText(){
     drawCat(2, 19, FALSE, FALSE);
 }
 
+//Desenha o fundo do aviso de jogo pausado
 void drawPauseScreenBackground(){
     drawGenericBackground(PAUSE_SCREEN_HEIGHT, PAUSE_SCREEN_LENGTH, PAUSE_SCREEN_INIT_LINE, PAUSE_SCREEN_INIT_COLUMN, PAUSE_SCREEN_BACKGROUND_COLOR, PAUSE_SCREEN_BORDER_COLOR);
 }

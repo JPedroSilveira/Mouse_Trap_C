@@ -1,5 +1,4 @@
 #include "MapUtils.h"
-#include <time.h>
 
 //Desenha o vetor do mapa na tela
 void drawMap(GAMEDATA* data, int mouseToRight){

@@ -28,6 +28,7 @@
 void drawGameInfo(GAMEDATA data);
 void updateScoreOnScreen(GAMEDATA data);
 void updateExecutionState(GAMEDATA data);
+void updateFoodInfoOnScreen(GAMEDATA data);
 void updateLevelOnScreen(GAMEDATA data);
 void updateLifesInfoOnScreen(GAMEDATA data);
 void updateCatsInfoOnScreen(GAMEDATA data);

@@ -2,6 +2,7 @@
 #define MAPUTILS_H_INCLUDED
 
 #include <stdio.h>
+#include <time.h>
 
 #include "../Consts/Boolean.h"
 #include "../Consts/MapDimensions.h"
