@@ -88,7 +88,7 @@ void moveCat(GAMEDATA* data){
                 data->gameMap[newPosition.line][newPosition.column] = catCh;
                 data->gameMap[cat->position.line][cat->position.column] = cat->overlaid;
 
-                if (temp != mouseCh){
+                if (temp != mouseCh && temp != catCh){
                     drawCat(newPosition.line, newPosition.column, cat->faceDirection, cat->immortal);
                 }
 
@@ -106,7 +106,7 @@ void moveCat(GAMEDATA* data){
             //Calcula o tempo passado desde o inicio da imortalidade do gato
             clock_t elapsedTime = ((clock() - cat->start_immortal_time) / (CLOCKS_PER_SEC / 1000));
 
-            if(elapsedTime > CAT_IMMORTAL_TIME){
+            if(elapsedTime > CAT_IMMORTAL_TIME || elapsedTime < 0){
                 cat->immortal = FALSE;
             }
         }

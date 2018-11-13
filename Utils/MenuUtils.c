@@ -23,6 +23,7 @@ void openMenu(GAMEDATA* data){
 void executeMenuChoice(GAMEDATA* data){
     clock_t start_time_dog = clock() - data->mouse.start_time_dog;
     int optSelected;
+    int response;
     int userCommand;
 
     do {
@@ -36,6 +37,8 @@ void executeMenuChoice(GAMEDATA* data){
             case TAB_CODE:
             case M_CHAR_CODE:
             case m_CHAR_CODE:
+            case V_CHAR_CODE:
+            case v_CHAR_CODE:
                 data->paused = FALSE;
                 data->mouse.start_time_dog = clock() - start_time_dog;
                 break;
@@ -46,7 +49,11 @@ void executeMenuChoice(GAMEDATA* data){
             case C_CHAR_CODE:
             case c_CHAR_CODE:
                 freeOldData(data);
-                startLoadGameMenu(data);
+                response = startLoadGameMenu(data);
+                if(!response){
+                    data->gameOver = TRUE;
+                    data->exitGame = TRUE;
+                }
                 drawSideColumns();
                 drawGameInfo(*data);
                 drawMap(data, data->mouse.faceDirection);
@@ -84,7 +91,7 @@ void drawMenuText(){
     y += 4;
     x -= 6;
     textcolor(MENU_TEXT_COLOR);
-    cputsxy(x, y, "[M] Voltar ao jogo");
+    cputsxy(x, y, "[V] Voltar ao jogo");
     y += 2;
     cputsxy(x, y, "[C] Carregar jogo");
     y += 2;

@@ -22,7 +22,17 @@ void drawGameInfo(GAMEDATA data){
 
     cputsxy(89, 9, "Tenha cuidado, fuja dos gatos!");
 
-    cputsxy(95, 15, "[P] Pausa o jogo.");
+    cputsxy(89, 10, "Ou pegue os ossos e ataque!");
+
+    cputsxy(89, 13, "Use as teclas direcionais,");
+
+    cputsxy(89, 14, "ou A/W/S/D para movimento");
+
+    cputsxy(89, 17, "Pegue todos os queijos e");
+
+    cputsxy(89, 18, "avance de nível!");
+
+    cputsxy(95, 26, "[P] Pausa o jogo.");
 }
 
 //Desenha o nome de usuário na tela
@@ -73,9 +83,11 @@ void updateCatsInfoOnScreen(GAMEDATA data){
 void updateExecutionState(GAMEDATA data){
     textbackground(DEFAULT_BG_COLOR);
     if(data.paused){
-        cputsxy(12, 9, "[Pausado]");
-    } else {
-        cputsxy(12, 9, "[Rodando]");
+        cputsxy(7, 9, "      [Pausado]     ");
+    } else if(data.waitForUserInput){
+        cputsxy(7, 9, "[Aguardando usuário]");
+    } else{
+        cputsxy(7, 9, "      [Rodando]     ");
     }
 }
 

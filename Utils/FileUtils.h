@@ -39,6 +39,6 @@ void createSaveGameDirectoryIFDoesntExists(char directory[MAX_PATH_LENGTH]);
 int createSaveGameFile(GAMEDATA data, char directory[MAX_PATH_LENGTH]);
 int loadSavedGameFile(GAMEDATA* data, char fileName[MAX_FILE_NAME]);
 void drawFilesList(char directoryNames[MAX_FILES][MAX_FILE_NAME], int filesCount, int page, int lastPage);
-void startLoadGameMenu(GAMEDATA* data);
+int startLoadGameMenu(GAMEDATA* data);
 
 #endif // FILEUTILS_H_INCLUDED

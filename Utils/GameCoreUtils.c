@@ -19,7 +19,11 @@ void startGameCore(GAMEDATA* data){
         //Caso o jogo deve esperar por uma tecla do usuário para começar
         if(data->waitForUserInput){
             userInput = getche();
-            data->waitForUserInput = 0;
+            data->waitForUserInput = FALSE;
+
+            //Atualiza o estado do jogo exibido em tela com a cor default
+            textcolor(DEFAULT_TEXT_COLOR);
+            updateExecutionState(*data);
         } else{ //Se não, tenta detectar tecla e continua execução
             userInput = tryCaptureUserInput();
         }
@@ -27,7 +31,7 @@ void startGameCore(GAMEDATA* data){
         //Toma uma decisão conforme tecla pressionada
         takeDecision(data, userInput);
 
-        if (data->mouse.isDog){
+        if (data->mouse.isDog && !data->waitForUserInput){
             //Calcula o tempo que se passou desde que o rato virou cachorro
             elapsedTime = ((clock() - data->mouse.start_time_dog) / (CLOCKS_PER_SEC / 1000));
             //Caso tenha passado do limite máximo ou seja igual a ele desativa o modo cachorro
@@ -42,7 +46,7 @@ void startGameCore(GAMEDATA* data){
         elapsedTime = ((clock() - start_mouse_move) / (CLOCKS_PER_SEC / 1000));
 
         //Caso tenha passado do tempo limite de movimentação desloca o rato novamente
-        if (elapsedTime > TIME_TO_MOVE_MOUSE){
+        if (elapsedTime > TIME_TO_MOVE_MOUSE && !data->waitForUserInput){
             moveMouse(data);
             start_mouse_move = clock();
             //Mapeia as distâncias do rato
@@ -51,7 +55,7 @@ void startGameCore(GAMEDATA* data){
 
         elapsedTime = ((clock() - start_cats_move) / (CLOCKS_PER_SEC / 1000));
 
-        if(elapsedTime > TIME_TO_MOVE_CATS){
+        if(elapsedTime > TIME_TO_MOVE_CATS && !data->waitForUserInput){
             moveCat(data);
             start_cats_move = clock();
         }
@@ -250,11 +254,12 @@ void takeDecision(GAMEDATA* data, int userInput){
         case B_CHAR_CODE:
         case b_CHAR_CODE:
             moveDoors(data);
+            mapDistances(data);
             break;
         case P_CHAR_CODE:
         case p_CHAR_CODE:
             data->mouse.direction = MOUSE_STOP_DIRECTION_CODE;
-            data->waitForUserInput = 1;
+            data->waitForUserInput = TRUE;
             //Pausa o jogo e aguarda por entrada do usuário para continuar
             pauseGame(data);
             textcolor(DEFAULT_TEXT_COLOR);

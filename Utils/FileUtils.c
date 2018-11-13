@@ -140,7 +140,7 @@ int createSaveGameFile(GAMEDATA data, char directory[MAX_PATH_LENGTH]){
 
 //Exibe um menu com os jogos salvos
 int loadSavedGameFile(GAMEDATA* data, char fileName[MAX_FILE_NAME]){
-    int _return = 0, x = 0;
+    int _return = FALSE, x = 0;
     char directory[MAX_PATH_LENGTH];
 
     getSaveGamesDirectoryName(directory);
@@ -153,34 +153,42 @@ int loadSavedGameFile(GAMEDATA* data, char fileName[MAX_FILE_NAME]){
         //Posiciona ponteiro no inicio do arquivo
         rewind(file);
 
-        fread(data, sizeof(GAMEDATA), 1, file);
+        if(fread(data, sizeof(GAMEDATA), 1, file) == 1){
+            _return = TRUE;
+            data->waitForUserInput = TRUE;
+            data->cat = malloc(sizeof(CAT));
+            data->door = malloc(sizeof(DOOR));
 
-        data->cat = malloc(sizeof(CAT));
-        data->door = malloc(sizeof(DOOR));
+            CAT* cat = data->cat;
 
-        CAT* cat = data->cat;
+            for(x = 0; x < data->ncats; x++){
+                if(x >= 1){
+                    cat->nextCat = malloc(sizeof(CAT));
+                    cat = cat->nextCat;
+                }
 
-        for(x = 0; x < data->ncats; x++){
-            fread(cat, sizeof(CAT), 1, file);
+                if(fread(cat, sizeof(CAT), 1, file) != 1){
+                    _return = FALSE;
+                }
+            }
 
-            cat->nextCat = malloc(sizeof(CAT));
-            cat = cat->nextCat;
+            cat->nextCat = NULL;
+
+            DOOR* door = data->door;
+
+            for(x = 0; x < data->ndoors; x++){
+                if(x >= 1){
+                    door->nextDoor = malloc(sizeof(DOOR));
+                    door = door->nextDoor;
+                }
+
+                if(fread(door, sizeof(DOOR), 1, file) != 1){
+                    _return = FALSE;
+                }
+            }
+
+            door->nextDoor = NULL;
         }
-
-        cat->nextCat = NULL;
-
-        DOOR* door = data->door;
-
-        for(x = 0; x < data->ndoors; x++){
-            fread(door, sizeof(DOOR), 1, file);
-
-            door->nextDoor = malloc(sizeof(DOOR));
-            door = door->nextDoor;
-        }
-
-        door->nextDoor = NULL;
-
-        _return = 1;
     }
 
     return _return;
@@ -245,9 +253,10 @@ void getSaveGamesDirectoryName(char directory[MAX_PATH_LENGTH]){
 }
 
 //Exibe as informações do menu de carregar jogo
-void startLoadGameMenu(GAMEDATA* data){
+//retorna 0 caso não seja possivel carregar o jogo
+int startLoadGameMenu(GAMEDATA* data){
     char directoryNames[MAX_FILES][MAX_FILE_NAME];
-    int userAnswer, fileSelected = 0, filesCount = 0, page = 1, selectedItem, lastPage = 1;
+    int userAnswer, fileSelected = 0, filesCount = 0, page = 1, selectedItem, lastPage = 1, _return = FALSE;
 
     filesCount = getSavedGamesList(directoryNames);
 
@@ -283,7 +292,8 @@ void startLoadGameMenu(GAMEDATA* data){
                 selectedItem = filesCount - ((page - 1) * LOAD_GAME_MENU_PAGE_LENGTH) - userAnswer + 49;
 
                 if(userAnswer - 49 < LOAD_GAME_MENU_PAGE_LENGTH && selectedItem > 0){
-                    fileSelected = loadSavedGameFile(data, directoryNames[selectedItem - 1]);
+                    _return = loadSavedGameFile(data, directoryNames[selectedItem - 1]);
+                    fileSelected = 1;
                 }
                 break;
         }

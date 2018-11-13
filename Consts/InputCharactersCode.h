@@ -19,6 +19,8 @@
 #define q_CHAR_CODE 113
 #define S_CHAR_CODE 83
 #define s_CHAR_CODE 115
+#define V_CHAR_CODE 86
+#define v_CHAR_CODE 118
 #define W_CHAR_CODE 87
 #define w_CHAR_CODE 119
 
