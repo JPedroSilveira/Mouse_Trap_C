@@ -44,6 +44,7 @@ void executeMenuChoice(GAMEDATA* data){
                 break;
             case N_CHAR_CODE:
             case n_CHAR_CODE:
+                restartGame(data);
                 data->paused = FALSE;
                 break;
             case C_CHAR_CODE:

@@ -45,5 +45,6 @@ void drawWinBG();
 void drawGameOverMessage(GAMEDATA* data);
 void drawGameOverBG();
 void drawRestartMessage(GAMEDATA* data);
+void restartGame(GAMEDATA* data);
 
 #endif // GAMECOREUTILS_H_INCLUDED

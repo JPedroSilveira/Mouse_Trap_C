@@ -397,20 +397,22 @@ void drawRestartMessage(GAMEDATA* data){
 
         //Reinicia o jogo
         if (answer == S_CHAR_CODE || answer == s_CHAR_CODE){
-            freeOldData(data); //Validar função
-
-            startGameData(data, INIT_LEVEL, 0, INIT_LIFE_AMOUNT, FALSE);
-
-            drawSideColumns();
-
-            drawGameInfo(*data);
-
-            drawMap(data, data->mouse.faceDirection);
-
-            exit = TRUE;
+            restartGame(data);
         } else if(answer == N_CHAR_CODE || answer == n_CHAR_CODE){
             data->exitGame = TRUE;
             exit = TRUE;
         }
     }while(!exit);
+}
+
+void restartGame(GAMEDATA* data){
+    freeOldData(data); //Validar função
+
+    startGameData(data, INIT_LEVEL, 0, INIT_LIFE_AMOUNT, FALSE);
+
+    drawSideColumns();
+
+    drawGameInfo(*data);
+
+    drawMap(data, data->mouse.faceDirection);
 }
