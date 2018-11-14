@@ -32,6 +32,8 @@ void drawGameInfo(GAMEDATA data){
 
     cputsxy(89, 18, "avance de nível!");
 
+    cputsxy(89, 21, "Tecle [B] para mover as portas");
+
     cputsxy(95, 26, "[P] Pausa o jogo.");
 }
 
