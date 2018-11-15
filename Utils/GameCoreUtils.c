@@ -398,6 +398,7 @@ void drawRestartMessage(GAMEDATA* data){
         //Reinicia o jogo
         if (answer == S_CHAR_CODE || answer == s_CHAR_CODE){
             restartGame(data);
+            exit = TRUE;
         } else if(answer == N_CHAR_CODE || answer == n_CHAR_CODE){
             data->exitGame = TRUE;
             exit = TRUE;
