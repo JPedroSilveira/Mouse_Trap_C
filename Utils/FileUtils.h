@@ -9,6 +9,9 @@
 #include <string.h>
 #include <math.h>
 
+#include "GameCoreUtils.h"
+#include "MapUtils.h"
+
 #include "../Consts/MapCharacters.h"
 #include "../Consts/Boolean.h"
 #include "../Consts/InputCharactersCode.h"
@@ -40,5 +43,6 @@ int createSaveGameFile(GAMEDATA data, char directory[MAX_PATH_LENGTH]);
 int loadSavedGameFile(GAMEDATA* data, char fileName[MAX_FILE_NAME]);
 void drawFilesList(char directoryNames[MAX_FILES][MAX_FILE_NAME], int filesCount, int page, int lastPage);
 int startLoadGameMenu(GAMEDATA* data);
+void drawLoadGameMenuBG();
 
 #endif // FILEUTILS_H_INCLUDED

@@ -1,4 +1,12 @@
 #include <windows.h>
+#include <conio.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <dirent.h>
+#include <string.h>
+#include <math.h>
+
 
 #include "Structs/GameData.h"
 #include "Utils/HeaderUtils.h"
@@ -6,7 +14,7 @@
 #include "Utils/GameCoreUtils.h"
 #include "Utils/ColumnUtils.h"
 
-int hideCursor();
+void hideCursor();
 
 int main(){
 
@@ -40,7 +48,7 @@ int main(){
 }
 
 //Esconde o cursor do teclado
-int hideCursor(){
+void hideCursor(){
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
     info.bVisible = FALSE;

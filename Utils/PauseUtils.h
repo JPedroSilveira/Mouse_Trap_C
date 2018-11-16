@@ -1,9 +1,6 @@
 #ifndef PAUSEUTILS_H_INCLUDED
 #define PAUSEUTILS_H_INCLUDED
 
-#include <stdio.h>
-#include <conio.h>
-#include <time.h>
 #include "../Consts/Boolean.h"
 #include "MapUtils.h"
 #include "UserInputUtils.h"

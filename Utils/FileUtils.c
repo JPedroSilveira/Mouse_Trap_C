@@ -317,6 +317,8 @@ int startLoadGameMenu(GAMEDATA* data){
                 break;
         }
     }while(!fileSelected);
+
+    return _return;
 }
 
 //Desenha a lista de arquivos com os jogos salvos para o usuário

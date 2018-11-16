@@ -1,9 +1,6 @@
 #ifndef MAPUTILS_H_INCLUDED
 #define MAPUTILS_H_INCLUDED
 
-#include <stdio.h>
-#include <time.h>
-
 #include "../Consts/Boolean.h"
 #include "../Consts/MapDimensions.h"
 #include "../Consts/MapTimers.h"
@@ -19,6 +16,7 @@
 
 #define NUM_CATS 4
 
+void drawEmpty(int line, int col);
 void drawWall(int line, int col);
 void drawMouse(int line, int col, int toRight, int isDog);
 void drawFood(int line, int col);
@@ -29,5 +27,7 @@ void drawMapItem(int lineInit, int colInit, int colorvector[MAP_ITEM_HEIGHT][MAP
 void drawMap(GAMEDATA* data, int mouseToRight);
 CAT getCatByPosition(GAMEDATA data, int line, int column);
 void drawItemByCh(char ch, int line, int column, int catToRight, int mouseToRight, int mouseIsDog, int catIsImmortal);
+void drawGenericBackground(int height, int length, int startLine, int startColumn, int color, int borderColor);
+
 
 #endif // MAPUTILS_H_INCLUDED

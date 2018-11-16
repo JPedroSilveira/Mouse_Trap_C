@@ -2,7 +2,7 @@
 #define GAMECOREUTILS_H_INCLUDED
 
 #define TIME_TO_MOVE_MOUSE 100
-#define TIME_TO_MOVE_CATS 250
+#define TIME_TO_MOVE_CATS 500
 #define LIMIT_TIME_OF_DOG 5000
 #define TIME_TO_SLEEP_AFTER_DEATH 1000
 #define SCORE_FOR_CAT 50
@@ -15,7 +15,6 @@
 #define WIN_MESSAGE_SCREEN_BACKGROUND_COLOR 0
 #define WIN_MESSAGE_DELAY 3000
 
-#include <time.h>
 #include "../Consts/GameStartData.h"
 #include "../Consts/InputCharactersCode.h"
 #include "../Consts/Boolean.h"

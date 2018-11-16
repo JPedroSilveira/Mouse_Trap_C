@@ -4,9 +4,7 @@
 	"Mouse.c"
 	"Door.c"
 
-1542066488 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\maputils.h
-	<stdio.h>
-	<time.h>
+1542396068 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\maputils.h
 	"../Consts/Boolean.h"
 	"../Consts/MapDimensions.h"
 	"../Consts/MapTimers.h"
@@ -18,8 +16,15 @@
 	"MenuUtils.h"
 	"HeaderUtils.h"
 
-1542391968 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\main.c
+1542395749 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\main.c
 	<windows.h>
+	<conio.h>
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<dirent.h>
+	<string.h>
+	<math.h>
 	"Structs/GameData.h"
 	"Utils/HeaderUtils.h"
 	"Utils/MapUtils.h"
@@ -41,7 +46,7 @@
 1540485037 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\fileutils.c
 	"FileUtils.h"
 
-1542127688 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\fileutils.h
+1542395834 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\fileutils.h
 	<stdio.h>
 	<stdlib.h>
 	<windows.h>
@@ -49,6 +54,8 @@
 	<dirent.h>
 	<string.h>
 	<math.h>
+	"GameCoreUtils.h"
+	"MapUtils.h"
 	"../Consts/MapCharacters.h"
 	"../Consts/Boolean.h"
 	"../Consts/InputCharactersCode.h"
@@ -73,9 +80,8 @@
 1540602612 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\columnutils.c
 	"ColumnUtils.h"
 
-1542065856 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\columnutils.h
+1542396045 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\columnutils.h
 	<stdio.h>
-	<conio.h>
 	"../Structs/GameData.h"
 	"../Consts/Boolean.h"
 	"DrawUtils.h"
@@ -85,41 +91,35 @@
 	<windows.h>
 	"MenuUtils.h"
 
-1541476426 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\menuutils.h
-	<stdio.h>
-	<conio.h>
-	<time.h>
+1542396105 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\menuutils.h
 	"../Consts/InputCharactersCode.h"
 	"../Consts/Boolean.h"
 	"../Structs/GameData.h"
+	"GameCoreUtils.h"
 	"DrawUtils.h"
 	"UserInputUtils.h"
 	"MapUtils.h"
+	"FileUtils.h"
 
 1540577522 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\movimentutils.c
 	"MovimentUtils.h"
 
-1542067490 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\movimentutils.h
-	<windows.h>
-	<time.h>
+1542396136 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\movimentutils.h
 	"../Consts/Boolean.h"
 	"../Consts/MapCharacters.h"
 	"../Consts/Boolean.h"
 	"../Structs/GameData.h"
 	"../Structs/Mouse.h"
+	"MouseSearch.h"
 	"DrawUtils.h"
 	"MapUtils.h"
 
-1542069281 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\pauseutils.h
-	<stdio.h>
-	<conio.h>
-	<time.h>
+1542395632 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\pauseutils.h
 	"../Consts/Boolean.h"
 	"MapUtils.h"
 	"UserInputUtils.h"
 
-1540964591 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\usernamescreenutils.h
-	<stdio.h>
+1542395638 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\usernamescreenutils.h
 	"../Consts/Boolean.h"
 	"DrawUtils.h"
 
@@ -150,7 +150,7 @@
 1542133418 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\menuutils.c
 	"MenuUtils.h"
 
-1542393575 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\fileutils.c
+1542395896 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\fileutils.c
 	"FileUtils.h"
 
 1542066599 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\pauseutils.c
@@ -160,7 +160,7 @@
 
 1540581254 c:\users\jpedr\desktop\mousetrap_project\mousetrap\consts\mapdimensions.h
 
-1542131073 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\movimentutils.c
+1542394387 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\movimentutils.c
 	"MovimentUtils.h"
 
 1540941599 c:\users\jpedr\desktop\mousetrap_project\mousetrap\consts\maptimers.h
@@ -170,24 +170,21 @@
 1542392178 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\maputils.c
 	"MapUtils.h"
 
-1542067575 c:\users\jpedr\desktop\mousetrap_project\mousetrap\structs\mouse.h
+1542395643 c:\users\jpedr\desktop\mousetrap_project\mousetrap\structs\mouse.h
 	<time.h>
 	"Position.h"
 
 1542067667 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\userinpututils.c
 	"UserInputUtils.h"
 
-1540964587 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\userinpututils.h
-	<stdio.h>
-	<conio.h>
+1542395635 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\userinpututils.h
 	"../Consts/Boolean.h"
 	"../Consts/MapTimers.h"
 
 1542393083 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\gamecoreutils.c
 	"GameCoreUtils.h"
 
-1542133369 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\gamecoreutils.h
-	<time.h>
+1542395956 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\gamecoreutils.h
 	"../Consts/GameStartData.h"
 	"../Consts/InputCharactersCode.h"
 	"../Consts/Boolean.h"
@@ -227,7 +224,8 @@
 1542069169 source:c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\mousesearch.c
 	"MouseSearch.h"
 
-1542069010 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\mousesearch.h
+1542395878 c:\users\jpedr\desktop\mousetrap_project\mousetrap\utils\mousesearch.h
+	"MovimentUtils.h"
 	"../Consts/MapDimensions.h"
 	"../Consts/MapCharacters.h"
 	"../Structs/GameData.h"

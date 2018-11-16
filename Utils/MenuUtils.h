@@ -1,16 +1,15 @@
 #ifndef MENUUTILS_H_INCLUDED
 #define MENUUTILS_H_INCLUDED
 
-#include <stdio.h>
-#include <conio.h>
-#include <time.h>
-
 #include "../Consts/InputCharactersCode.h"
 #include "../Consts/Boolean.h"
 #include "../Structs/GameData.h"
+
+#include "GameCoreUtils.h"
 #include "DrawUtils.h"
 #include "UserInputUtils.h"
 #include "MapUtils.h"
+#include "FileUtils.h"
 
 #define MENU_INIT_LINE 8
 #define MENU_INIT_COLUMN 37

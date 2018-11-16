@@ -1,7 +1,6 @@
 #ifndef USERNAMESCREENUTILS_H_INCLUDED
 #define USERNAMESCREENUTILS_H_INCLUDED
 
-#include <stdio.h>
 #include "../Consts/Boolean.h"
 #include "DrawUtils.h"
 

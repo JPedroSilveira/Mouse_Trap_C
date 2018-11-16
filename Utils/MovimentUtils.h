@@ -1,13 +1,13 @@
 #ifndef MOVIMENTUTILS_H_INCLUDED
 #define MOVIMENTUTILS_H_INCLUDED
 
-#include <windows.h>
-#include <time.h>
 #include "../Consts/Boolean.h"
 #include "../Consts/MapCharacters.h"
 #include "../Consts/Boolean.h"
 #include "../Structs/GameData.h"
 #include "../Structs/Mouse.h"
+
+#include "MouseSearch.h"
 #include "DrawUtils.h"
 #include "MapUtils.h"
 
