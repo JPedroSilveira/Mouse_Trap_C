@@ -41,6 +41,7 @@ void moveCat(GAMEDATA* data){
     CAT* cat = data->cat;
 
     while(cat != NULL){
+        //Verifica se o gato não está no modo imortal não devendo se mover
         if(!cat->immortal){
             int distanceRight, distanceLeft, distanceUp, distanceDown, bestDistanceRL,
             bestDistanceUD, selectedDistanceRL, selectedDistanceUD, selectedDistance;
@@ -49,18 +50,26 @@ void moveCat(GAMEDATA* data){
 
             char temp;
 
+            //Verifica a distância de cada direção do gato ao rato
             distanceRight = data->mapDistances[cat->position.line][cat->position.column + 1];
             distanceLeft = data->mapDistances[cat->position.line][cat->position.column - 1];
             distanceUp = data->mapDistances[cat->position.line - 1][cat->position.column];
             distanceDown = data->mapDistances[cat->position.line + 1][cat->position.column];
 
+            //Se o rato estiver no modo cachorro segue a distância mais longa
             if(data->mouse.isDog){
+                //Pega a maior distância entre a direita e a esquerda
                 bestDistanceRL = getLongerDistance(distanceRight, distanceLeft, &selectedDistanceRL);
+                //Pega a maior distância entre cima e baixo
                 bestDistanceUD = getLongerDistance(distanceUp, distanceDown, &selectedDistanceUD);
+                //Pega a maior distância total
                 getLongerDistance(bestDistanceRL, bestDistanceUD, &selectedDistance);
-            } else{
+            } else{ //Caso não, pega a rota mais curta
+                //Pega a menor distância entre a direita e a esquerda
                 bestDistanceRL = getShorterDistance(distanceRight, distanceLeft, &selectedDistanceRL);
+                //Pega a menor distância entre cima e baixo
                 bestDistanceUD = getShorterDistance(distanceUp, distanceDown, &selectedDistanceUD);
+                //Pega a menor distância total
                 getShorterDistance(bestDistanceRL, bestDistanceUD, &selectedDistance);
             }
 
@@ -82,7 +91,7 @@ void moveCat(GAMEDATA* data){
                 }
             }
 
-            if(selectedDistance == 1 || selectedDistance == 2){
+            if(selectedDistance == 1 || selectedDistance == 2){ //Apenas caso tenho encontrado uma rota
                 temp = data->gameMap[newPosition.line][newPosition.column];
 
                 data->gameMap[newPosition.line][newPosition.column] = catCh;
@@ -98,7 +107,9 @@ void moveCat(GAMEDATA* data){
                 cat->position.column = newPosition.column;
                 if(temp != mouseCh && temp != catCh){
                     cat->overlaid = temp;
-                } else{
+                } else if(temp == catCh){ //Caso esteja sobrepondo outro gato seu item sobreposto será o mesmo item que o outro gato sobrepôs
+                    cat->overlaid = getCatByPosition(*data, newPosition.line, newPosition.column).overlaid;
+                } else {
                     cat->overlaid = ' ';
                 }
             }

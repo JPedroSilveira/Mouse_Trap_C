@@ -3,7 +3,7 @@
 //Lê o mapa apartir de um arquivo de texto e salva na estrutura GAMEDATA passada
 //Os parâmetros ln e col representam o tamanho do vetor
 void readMap(int ln, int col, GAMEDATA* data){
-    int i, j;
+    int i, j, initialX;
     char line[col], directory[MAX_PATH_LENGTH];
 
     FILE* file;
@@ -16,20 +16,28 @@ void readMap(int ln, int col, GAMEDATA* data){
 
         for (i = 0; i < ln; i++){
             //Pega a linha atual do for
-            fgets(line, col + 2, file);
+            //2 * col é utilizado como margem de erro para ignorar possíveis espaços digitados a mais ao lado de cada linha do mapa
+            fgets(line, 2 * col, file);
+
+            initialX = 0;
+            //Procura primeiro o valor de 'X' que deve ser o caracter inicial de cada linha
+            while(line[initialX] != 'X'){
+                initialX++;
+            }
 
             //Para cada coluna lê o caracter correspondente
             for (j = 0; j < col; j++){
-                data->gameMap[i][j] = line[j];
+                char readCharacter = line[j + initialX];
+                data->gameMap[i][j] = readCharacter;
 
                 //Caso o caracter seja um rato inicializa ele com a posição inicial
                 //na estrutura do jogo
-                if (line[j] == mouseCh){
+                if (readCharacter == mouseCh){
                     data->mouse.position.column = j;
                     data->mouse.initialPosition.column = j;
                     data->mouse.position.line = i;
                     data->mouse.initialPosition.line = i;
-                } else if(line[j] == doorCh){
+                } else if(readCharacter == doorCh){
                     //Caso seja uma porta adiciona ela na lista e salva suas informações iniciais
                     DOOR* newDoor = malloc(sizeof(DOOR));
 
@@ -43,7 +51,7 @@ void readMap(int ln, int col, GAMEDATA* data){
 
                     data->door = newDoor;
                     data->ndoors++;
-                } else if(line[j] == catCh){
+                } else if(readCharacter == catCh){
                     //Caso o caracter represente um gato, adiciona ele na lista
                     //e inicializa com os valores iniciais
                     CAT* newCat = malloc(sizeof(CAT));
@@ -61,7 +69,7 @@ void readMap(int ln, int col, GAMEDATA* data){
 
                     data->cat = newCat;
                     data->ncats++;
-                } else if(line[j] == foodCh){
+                } else if(readCharacter == foodCh){
                     data->nfood++;
                 }
             }
@@ -311,6 +319,7 @@ int startLoadGameMenu(GAMEDATA* data){
     }while(!fileSelected);
 }
 
+//Desenha a lista de arquivos com os jogos salvos para o usuário
 void drawFilesList(char directoryNames[MAX_FILES][MAX_FILE_NAME], int filesCount, int page, int lastPage){
     int count = 1, lastFile, firstFile, x = LOAD_GAME_MENU_INIT_COLUMN + 10, y = LOAD_GAME_MENU_INIT_LINE + 3;
 
