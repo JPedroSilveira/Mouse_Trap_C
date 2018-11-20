@@ -27,7 +27,5 @@ void drawMapItem(int lineInit, int colInit, int colorvector[MAP_ITEM_HEIGHT][MAP
 void drawMap(GAMEDATA* data, int mouseToRight);
 CAT getCatByPosition(GAMEDATA data, int line, int column);
 void drawItemByCh(char ch, int line, int column, int catToRight, int mouseToRight, int mouseIsDog, int catIsImmortal);
-void drawGenericBackground(int height, int length, int startLine, int startColumn, int color, int borderColor);
-
 
 #endif // MAPUTILS_H_INCLUDED

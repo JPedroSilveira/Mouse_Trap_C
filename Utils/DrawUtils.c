@@ -65,3 +65,21 @@ void drawMultiColor(int lineInit, int colInit, int height, int length, int itemV
     /*RETORNA A COR DE TEXTO PARA O PADR�O*/
     textcolor(DEFAULT_TEXT_COLOR);
 }
+
+//Desenha um fundo com borda
+void drawGenericBackground(int height, int length, int startLine, int startColumn, int color, int borderColor){
+    int itemVector[height][length];
+    char chvector[height][length];
+
+    for (int x = 0; x < height; x++){
+        for (int y = 0; y < length; y++){
+            if (y == 0 || x == 0 || x == height - 1 || y == length - 1){
+                itemVector[x][y] = borderColor;
+            } else{
+                itemVector[x][y] = color;
+            }
+            chvector[x][y] = ' ';
+        }
+    }
+    drawMultiColor(startLine, startColumn, height, length, itemVector, chvector, 0);
+}

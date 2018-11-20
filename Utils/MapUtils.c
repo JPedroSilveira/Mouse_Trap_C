@@ -16,24 +16,6 @@ void drawMap(GAMEDATA* data, int mouseToRight){
     }
 }
 
-//Desenha um fundo com borda
-void drawGenericBackground(int height, int length, int startLine, int startColumn, int color, int borderColor){
-    int itemVector[height][length];
-    char chvector[height][length];
-
-    for (int x = 0; x < height; x++){
-        for (int y = 0; y < length; y++){
-            if (y == 0 || x == 0 || x == height - 1 || y == length - 1){
-                itemVector[x][y] = borderColor;
-            } else{
-                itemVector[x][y] = color;
-            }
-            chvector[x][y] = ' ';
-        }
-    }
-    drawMultiColor(startLine, startColumn, height, length, itemVector, chvector, 0);
-}
-
 //Retorna o gato que estiver em uma determinada localização (linha x coluna)
 CAT getCatByPosition(GAMEDATA data, int line, int column){
     CAT* cat = data.cat;

@@ -18,7 +18,7 @@ void drawGameInfo(GAMEDATA data){
 
     updateFoodInfoOnScreen(data);
 
-    cputsxy(7, 27, "[M] = Acessar o menu");
+    cputsxy(7, 27, "[M] = Acessar o menu ");
 
     cputsxy(89, 9, "Tenha cuidado, fuja dos gatos!");
 
