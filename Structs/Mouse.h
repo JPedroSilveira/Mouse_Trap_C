@@ -20,8 +20,7 @@
 // - initialPosition: Representa a posição inicial do rato no jogo
 // - start_time_dog: Representa o horário no qual o rato virou cachorro
 // - overlaid: Representa o elemento do jogo sobreposta pelo rato
-typedef struct Mouse
-{
+typedef struct Mouse{
     int faceDirection, nlifes, direction, isDog;
     POSITION position, initialPosition;
     clock_t start_time_dog;

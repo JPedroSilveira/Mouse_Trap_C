@@ -11,8 +11,7 @@
 // - overlaid: Representa um elemento sobreposto pelo gato
 // - start_immortal_time: Representa o horário em que o gato iniciou seu estado de imortalidade
 // - nextCat: Ponteiro para o próximo gato da lista
-typedef struct Cat
-{
+typedef struct Cat{
     int faceDirection, immortal;
     POSITION position, initialPosition;
     char overlaid;

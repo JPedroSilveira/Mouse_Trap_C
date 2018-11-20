@@ -29,8 +29,7 @@
 // - door: Representa um ponteiro para a primeira porta da lista do jogo
 // - cat: Representa um ponteiro para o primeiro gato da lista do jogo
 // - mouse: Representa as informações do rato no jogo
-typedef struct GameData
-{
+typedef struct GameData{
    int paused, level,
         gameOver, menuOpened,
         exitGame, score, ncats, ndoors,

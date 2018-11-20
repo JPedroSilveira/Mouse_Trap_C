@@ -8,8 +8,7 @@
 // - position: Representa a posição atual da porta
 // - overlaid: Representa um elemento do jogo sobreposto pela porta
 // - nextDoor: Ponteiro para a próxima porta da lista
-typedef struct Door
-{
+typedef struct Door{
    int opened;
    POSITION position;
    char overlaid;
