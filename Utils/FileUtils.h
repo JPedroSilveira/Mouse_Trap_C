@@ -30,7 +30,7 @@
 #define LOAD_GAME_MENU_BORDER_COLOR 14
 #define LOAD_GAME_MENU_CH_COLOR 0
 #define LOAD_GAME_MENU_TEXT_COLOR 15
-#define LOAD_GAME_MENU_PAGE_LENGTH 5
+#define LOAD_GAME_MENU_PAGE_LENGTH 4
 
 int getSavedGamesList(char directoryNames[MAX_FILES][MAX_FILE_NAME]);
 void getLevelDirectoryName(char directory[MAX_PATH_LENGTH], int level);
