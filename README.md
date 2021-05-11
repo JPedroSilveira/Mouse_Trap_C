@@ -1,1 +1,3 @@
-Jogo Mouse Trap desenvolvido em C para a disciplina de Algoritmos e Programação (INF-UFRGS).
+# Algoritmos e Programação
+
+## Jogo Mouse Trap implementado em C através de uma aplicação de terminal
